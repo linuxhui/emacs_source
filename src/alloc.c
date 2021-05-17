@@ -5475,6 +5475,7 @@ make_pure_bignum (Lisp_Object value)
 /* Return a vector with room for LEN Lisp_Objects allocated from
    pure space.  */
 
+/* 从lisp 管辖的区域返回一个区域， 用于存放 n个 listobject对象的大小*/
 static Lisp_Object
 make_pure_vector (ptrdiff_t len)
 {

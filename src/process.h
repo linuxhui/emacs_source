@@ -1,5 +1,6 @@
 /* Definitions for asynchronous process control in GNU Emacs.
    Copyright (C) 1985, 1994, 2001-2021 Free Software Foundation, Inc.
+   emacs中的子程序控制
 
 This file is part of GNU Emacs.
 
@@ -44,13 +45,16 @@ struct Lisp_Process
     union vectorlike_header header;
 
     /* Name of subprocess terminal.  */
+      /* terminal name */
     Lisp_Object tty_name;
 
     /* Name of this process.  */
+      /* process name */
     Lisp_Object name;
 
     /* List of command arguments that this process was run with.
        Is set to t for a stopped network process; nil otherwise.  */
+      /* 程序命令 */
     Lisp_Object command;
 
     /* (funcall FILTER PROC STRING)  (if FILTER is non-nil)

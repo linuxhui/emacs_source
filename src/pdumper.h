@@ -1,5 +1,5 @@
 /* Header file for the portable dumper.
-
+   portable 便携式的
 Copyright (C) 2016, 2018-2021 Free Software Foundation, Inc.
 
 This file is part of GNU Emacs.

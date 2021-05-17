@@ -1148,6 +1148,7 @@ load_seccomp (const char *file)
 /* Load Secure Computing filter from file specified with the --seccomp
    option.  Exit if that fails.  */
 
+/* 利用 load_seccomp 加载内核的过滤条件 */
 static void
 maybe_load_seccomp (int argc, char **argv)
 {
@@ -1179,6 +1180,7 @@ main (int argc, char **argv)
   /* First, check whether we should apply a seccomp filter.  This
      should come at the very beginning to allow the filter to protect
      the initialization phase.  */
+  /* 检查是否使用了 seccomp ， 这个是内核的安全机制， 在docker等其他场景下都有使用 */
 #if SECCOMP_USABLE
   maybe_load_seccomp (argc, argv);
 #endif
@@ -1207,6 +1209,7 @@ main (int argc, char **argv)
 	break;
       skip_args++;
     }
+  /* 关于dump/loads的内容 很多 */
 #ifdef HAVE_PDUMPER
   bool attempt_load_pdump = false;
 #endif
@@ -1259,48 +1262,8 @@ main (int argc, char **argv)
     gflags.will_not_unexec_ = true;
 #endif
 
-#ifdef WINDOWSNT
-  /* Grab our malloc arena space now, before anything important
-     happens.  This relies on the static heap being needed only in
-     temacs and only if we are going to dump with unexec.  */
-  bool use_dynamic_heap = true;
-  if (temacs)
-    {
-      char *temacs_str = NULL, *p;
-      for (p = argv[0]; (p = strstr (p, "temacs")) != NULL; p++)
-	temacs_str = p;
-      if (temacs_str != NULL
-	  && (temacs_str == argv[0] || IS_DIRECTORY_SEP (temacs_str[-1])))
-	{
-	  /* Note that gflags are set at this point only if we have been
-	     called with the --temacs=METHOD option.  We assume here that
-	     temacs is always called that way, otherwise the functions
-	     that rely on gflags, like will_dump_with_pdumper_p below,
-	     will not do their job.  */
-	  use_dynamic_heap = will_dump_with_pdumper_p ();
-	}
-    }
-  init_heap (use_dynamic_heap);
-#endif
-#if defined WINDOWSNT || defined HAVE_NTGUI
-  /* Set global variables used to detect Windows version.  Do this as
-     early as possible.  (w32proc.c calls this function as well, but
-     the additional call here is harmless.) */
-  cache_system_info ();
-#ifdef WINDOWSNT
-  /* On Windows 9X, we have to load UNICOWS.DLL as early as possible,
-     to have non-stub implementations of APIs we need to convert file
-     names between UTF-8 and the system's ANSI codepage.  */
-  maybe_load_unicows_dll ();
-  /* Initialize the codepage for file names, needed to decode
-     non-ASCII file names during startup.  */
-  w32_init_file_name_codepage ();
-  /* Initialize the startup directory, needed for emacs_wd below.  */
-  w32_init_current_directory ();
-#endif
-  w32_init_main_thread ();
-#endif
 
+  /* 加载pdump */
 #ifdef HAVE_PDUMPER
   if (attempt_load_pdump)
     load_pdump (argc, argv);
@@ -1321,12 +1284,7 @@ main (int argc, char **argv)
     run_time_remap (argv[0]);
 #endif
 
-/* If using unexmacosx.c (set by s/darwin.h), we must do this. */
-#if defined DARWIN_OS && defined HAVE_UNEXEC
-  if (!initialized)
-    unexec_init_emacs_zone ();
-#endif
-
+  /* 初始化 stderr/ stdin/ stdout 三个文件描述符 */
   init_standard_fds ();
   atexit (close_output_streams);
 
@@ -1335,6 +1293,7 @@ main (int argc, char **argv)
   while (argv[argc]) argc++;
 
   skip_args = 0;
+  /* 版本检查 */
   if (argmatch (argv, argc, "-version", "--version", 3, NULL, &skip_args))
     {
       const char *version, *copyright;
@@ -1375,36 +1334,25 @@ main (int argc, char **argv)
       exit (0);
     }
 
+  /* 获取当前目录 */
   emacs_wd = emacs_get_current_dir_name ();
-#ifdef HAVE_PDUMPER
-  if (dumped_with_pdumper_p ())
-    pdumper_record_wd (emacs_wd);
-#endif
 
   if (argmatch (argv, argc, "-chdir", "--chdir", 4, &ch_to_dir, &skip_args))
     {
-#ifdef WINDOWSNT
-      /* argv[] array is kept in its original ANSI codepage encoding,
-	 we need to convert to UTF-8, for chdir to work.  */
-      char newdir[MAX_UTF8_PATH];
-
-      filename_from_ansi (ch_to_dir, newdir);
-      ch_to_dir = newdir;
-#endif
+	// 切换目录失败
       if (chdir (ch_to_dir) != 0)
         {
           fprintf (stderr, "%s: Can't chdir to %s: %s\n",
                    argv[0], ch_to_dir, strerror (errno));
           exit (1);
         }
+      // 原始的目录
       original_pwd = emacs_wd;
-#ifdef WINDOWSNT
-      /* Reinitialize Emacs's notion of the startup directory.  */
-      w32_init_current_directory ();
-#endif
+      // 当前的目录
       emacs_wd = emacs_get_current_dir_name ();
     }
 
+  /* 资源限制管理 */
 #if defined (HAVE_SETRLIMIT) && defined (RLIMIT_STACK) && !defined (CYGWIN)
   /* Extend the stack space available.  Don't do that if dumping,
      since some systems (e.g. DJGPP) might define a smaller stack
@@ -1481,11 +1429,6 @@ main (int argc, char **argv)
 
 #endif	/* not SYSTEM_MALLOC and not HYBRID_MALLOC */
 
-#ifdef MSDOS
-  set_binary_mode (STDIN_FILENO, O_BINARY);
-  fflush (stdout);
-  set_binary_mode (STDOUT_FILENO, O_BINARY);
-#endif /* MSDOS */
 
   /* Set locale, so that initial error messages are localized properly.
      However, skip this if LC_ALL is "C", as it's not needed in that case.
@@ -1502,6 +1445,7 @@ main (int argc, char **argv)
       setlocale (LC_ALL, "");
       fixup_locale ();
     }
+  /* 采用utf8 进行处理 */
   text_quoting_flag = using_utf8 ();
 
   inhibit_window_system = 0;
@@ -1550,6 +1494,7 @@ main (int argc, char **argv)
       noninteractive = 1;
       Vundo_outer_limit = Qnil;
     }
+  /* 脚本模式 */
   if (argmatch (argv, argc, "-script", "--script", 3, &junk, &skip_args))
     {
       noninteractive = 1;	/* Set batch mode.  */
@@ -1562,6 +1507,7 @@ main (int argc, char **argv)
     }
 
   /* Handle the --help option, which gives a usage message.  */
+  /* 帮助模式 */
   if (argmatch (argv, argc, "-help", "--help", 3, NULL, &skip_args))
     {
       int i;
@@ -1965,17 +1911,8 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
      except when building temacs
      because the -d argument has not been skipped in skip_args.  */
 
-#ifdef MSDOS
-  /* Call early 'cause init_environment needs it.  */
-  init_dosfns ();
-  /* Set defaults for several environment variables.  */
-  if (initialized)
-    init_environment (argc, argv, skip_args);
-  else
-    tzset ();
-#endif /* MSDOS */
-
-#ifdef HAVE_KQUEUE
+  /* guess 文件watch */
+#ifdef HAVE_KQUEUEA
   globals_of_kqueue ();
 #endif
 
@@ -1983,10 +1920,12 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
   globals_of_gfilenotify ();
 #endif
 
+  /* 初始化环境 */
   /* Initialize and GC-protect Vinitial_environment and
      Vprocess_environment before set_initial_environment fills them
      in.  */
   if (!initialized)
+      // 子处理调用
     syms_of_callproc ();
   /* egetenv is a pretty low-level facility, which may get called in
      many circumstances; it seems flimsy to put off initializing it
@@ -2006,14 +1945,6 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
      Emacs.  */
   init_environment (argv);
   init_ntproc (will_dump_p ()); /* must precede init_editfns.  */
-#endif
-
-  /* AIX crashes are reported in system versions 3.2.3 and 3.2.4
-     if this is not done.  Do it after set_global_environment so that we
-     don't pollute Vglobal_environment.  */
-  /* Setting LANG here will defeat the startup locale processing...  */
-#ifdef AIX
-  xputenv ("LANG=C");
 #endif
 
   /* Init buffer storage and default directory of main buffer.  */
@@ -2226,6 +2157,7 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
   /* This calls putenv and so must precede init_process_emacs.  */
   init_timefns ();
 
+  // 设置用户信息
   init_editfns ();
 
   /* These two call putenv.  */

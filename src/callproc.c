@@ -1,4 +1,5 @@
 /* Synchronous subprocess invocation for GNU Emacs.
+   同步子处理器调用
 
 Copyright (C) 1985-1988, 1993-1995, 1999-2021 Free Software Foundation,
 Inc.

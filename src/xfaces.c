@@ -397,7 +397,7 @@ static struct face *realize_non_ascii_face (struct frame *, Lisp_Object,
 int color_count[256];
 
 /* Register color PIXEL as allocated.  */
-
+/* 像素点  */
 void
 register_color (unsigned long pixel)
 {

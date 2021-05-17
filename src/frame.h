@@ -87,18 +87,22 @@ struct frame
 
   /* Name of this frame: a Lisp string.  It is used for looking up resources,
      as well as for the title in some cases.  */
+    /* 名字 */
   Lisp_Object name;
 
   /* The name to use for the icon, the last time
      it was refreshed.  nil means not explicitly specified.  */
+    /* icon 图表 */
   Lisp_Object icon_name;
 
   /* This is the frame title specified explicitly, if any.
      Usually it is nil.  */
+    /* 通常情况下为空 */
   Lisp_Object title;
 
 #if defined (HAVE_WINDOW_SYSTEM)
   /* This frame's parent frame, if it has one.  */
+    /* 父Frame */
   Lisp_Object parent_frame;
 #endif /* HAVE_WINDOW_SYSTEM */
 
@@ -118,27 +122,32 @@ struct frame
   /* This frame's root window.  Every frame has one.
      If the frame has only a minibuffer window, this is it.
      Otherwise, if the frame has a minibuffer window, this is its sibling.  */
+    /* 根窗口 */
   Lisp_Object root_window;
 
   /* This frame's selected window.
      Each frame has its own window hierarchy
      and one of the windows in it is selected within the frame.
      The selected window of the selected frame is Emacs's selected window.  */
+    /* 被选择的窗口 */
   Lisp_Object selected_window;
 
   /* This frame's selected window when run_window_change_functions was
      called the last time on this frame.  */
+    /* 老的选择窗口 */
   Lisp_Object old_selected_window;
 
   /* This frame's minibuffer window.
      Most frames have their own minibuffer windows,
      but only the selected frame's minibuffer window
      can actually appear to exist.  */
+    /* minibuffer 窗口 */
   Lisp_Object minibuffer_window;
 
   /* Parameter alist of this frame.
      These are the parameters specified when creating the frame
      or modified with modify-frame-parameters.  */
+    /* 创建参数 */
   Lisp_Object param_alist;
 
   /* List of scroll bars on this frame.
@@ -148,6 +157,7 @@ struct frame
      instead of in the `device' structure so that the garbage
      collector doesn't need to look inside the window-system-dependent
      structure.  */
+    /* 滚动bar */
   Lisp_Object scroll_bars;
   Lisp_Object condemned_scroll_bars;
 
@@ -156,6 +166,7 @@ struct frame
      They are KEY, STRING, SUBMAP, and HPOS.
      (HPOS is not used in when the X toolkit is in use.)
      There are four additional elements of nil at the end, to terminate.  */
+    /* 菜单栏信息 */
   Lisp_Object menu_bar_items;
 
   /* Alist of elements (FACE-NAME . FACE-VECTOR-DATA).  */
@@ -170,10 +181,12 @@ struct frame
   Lisp_Object buffer_predicate;
 
   /* List of buffers viewed in this frame, for other-buffer.  */
+    /* 当前Frame的buffer列表 */
   Lisp_Object buffer_list;
 
   /* List of buffers that were viewed, then buried in this frame.  The
      most recently buried buffer is first.  For last-buffer.  */
+    /* 访问但是不再使用的buffer列表 */
   Lisp_Object buried_buffer_list;
 
 #if defined (HAVE_X_WINDOWS) && ! defined (USE_X_TOOLKIT) && ! defined (USE_GTK)
@@ -184,18 +197,22 @@ struct frame
 
 #if defined (HAVE_WINDOW_SYSTEM)
   /* A window used to display the tab-bar of a frame.  */
+    /* tab bars */
   Lisp_Object tab_bar_window;
 
   /* Desired and current contents displayed in that window.  */
+    /* 展示的内容 */
   Lisp_Object desired_tab_bar_string;
   Lisp_Object current_tab_bar_string;
 #endif
 
 #if defined (HAVE_WINDOW_SYSTEM) && ! defined (HAVE_EXT_TOOL_BAR)
   /* A window used to display the tool-bar of a frame.  */
+    /*  tool-bar 虽然看起来没有什么用  */
   Lisp_Object tool_bar_window;
 
   /* Desired and current contents displayed in that window.  */
+    /* tools 展示的内容 */
   Lisp_Object desired_tool_bar_string;
   Lisp_Object current_tool_bar_string;
 #endif
@@ -212,9 +229,11 @@ struct frame
 #endif
 
   /* Desired and current tab-bar items.  */
+    /* tab bar 信息展示 */
   Lisp_Object tab_bar_items;
 
   /* Desired and current tool-bar items.  */
+    /* tool bar 信息展示 */
   Lisp_Object tool_bar_items;
   /* tool_bar_items should be the last Lisp_Object member.  */
 
@@ -222,14 +241,17 @@ struct frame
   struct face_cache *face_cache;
 
   /* Tab-bar item index of the item on which a mouse button was pressed.  */
+    /* 鼠标点击的tab bar */
   int last_tab_bar_item;
 
 #if defined (HAVE_WINDOW_SYSTEM) && ! defined (HAVE_EXT_TOOL_BAR)
   /* Tool-bar item index of the item on which a mouse button was pressed.  */
+    /* 当前被点击的tool bar 位置 */
   int last_tool_bar_item;
 #endif
 
   /* Number of elements in `menu_bar_vector' that have meaningful data.  */
+    /* menu bar使用数量*/
   int menu_bar_items_used;
 
 #if defined (USE_X_TOOLKIT) || defined (HAVE_NTGUI)
@@ -245,6 +267,7 @@ struct frame
 #endif
 
   /* Glyph pool and matrix.  */
+    /* 图表池和矩阵 */
   struct glyph_pool *current_pool;
   struct glyph_pool *desired_pool;
   struct glyph_matrix *desired_matrix;
@@ -478,6 +501,7 @@ struct frame
   int tab_bar_lines;
 
   /* Height of frame internal tab bar in pixels.  */
+    /* tab bar 的高度 */
   int tab_bar_height;
 
   int n_tab_bar_rows;
@@ -507,12 +531,15 @@ struct frame
 
   /* Text width and height of this frame in (and maybe rounded to) frame
      columns and lines.  */
+    /* 文字的行和列数 */
   int text_cols, text_lines;
   /* Text width and height of this frame in pixels.  */
+    /* 像素大小的文字长度和高度 */
   int text_width, text_height;
 
   /* Native width of this frame in (and maybe rounded to) frame columns
      and lines.  */
+    /* 所有的行数和列数 */
   int total_cols, total_lines;
   /* Native width and height of this frame in pixels.  */
   int pixel_width, pixel_height;
@@ -580,6 +607,7 @@ struct frame
   output_data;
 
   /* List of font-drivers available on the frame.  */
+    /* 可用的字体 */
   struct font_driver_list *font_driver_list;
 
 #if defined (HAVE_X_WINDOWS)
@@ -596,6 +624,7 @@ struct frame
 
   /* What kind of text cursor should we draw when the cursor blinks off?
      This can be filled_box_cursor or bar_cursor or no_cursor.  */
+    /* 当关闭光标闪烁的时候，应该展示的游标样式 */
   enum text_cursor_kinds blink_off_cursor;
 
   /* Width of bar cursor (if we are using that) for blink-off state.  */
@@ -618,6 +647,7 @@ struct frame
   int config_scroll_bar_lines;
 
   /* The baud rate that was used to calculate costs for this frame.  */
+    /* 该frame的波特率 */
   intmax_t cost_calculation_baud_rate;
 
   /* Frame opacity

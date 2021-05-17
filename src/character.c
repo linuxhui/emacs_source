@@ -52,7 +52,7 @@ char_resolve_modifier_mask (EMACS_INT c)
 {
   /* A non-ASCII character can't reflect modifier bits to the code.  */
   if (! ASCII_CHAR_P ((c & ~CHAR_MODIFIER_MASK)))
-    return c;
+      return c;
 
   /* For Meta, Shift, and Control modifiers, we need special care.  */
   if (c & CHAR_SHIFT)

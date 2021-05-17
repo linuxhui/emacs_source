@@ -46,12 +46,15 @@ struct thread_state
 #define saved_last_thing_searched (current_thread->m_saved_last_thing_searched)
 
   /* The thread's name.  */
+    /* 线程名 */
   Lisp_Object name;
 
   /* The thread's function.  */
+    /* 线程函数 */
   Lisp_Object function;
 
   /* The thread's result, if function has finished.  */
+    /* 函数结束时，线程的结果 */
   Lisp_Object result;
 
   /* If non-nil, this thread has been signaled.  */
@@ -104,6 +107,7 @@ struct thread_state
 #define specpdl_ptr (current_thread->m_specpdl_ptr)
 
   /* Depth in Lisp evaluations and function calls.  */
+    /* 调用深度 */
   intmax_t m_lisp_eval_depth;
 #define lisp_eval_depth (current_thread->m_lisp_eval_depth)
 
@@ -157,6 +161,7 @@ struct thread_state
 #define getcjmp (current_thread->m_getcjmp)
 
   /* The OS identifier for this thread.  */
+    /* thread id */
   sys_thread_t thread_id;
 
   /* The condition variable for this thread.  This is associated with
@@ -179,6 +184,7 @@ struct thread_state
   int not_holding_lock;
 
   /* Threads are kept on a linked list.  */
+    /* 单项链表，关联到下个thread */
   struct thread_state *next_thread;
 } GCALIGNED_STRUCT;
 

@@ -11356,7 +11356,7 @@ init_keyboard (void)
 {
   /* This is correct before outermost invocation of the editor loop.  */
   command_loop_level = -1;
-  quit_char = Ctl ('g');
+  quit_char = Ctl ('g'); 	/* 退出字符 */
   Vunread_command_events = Qnil;
   timer_idleness_start_time = invalid_timespec ();
   total_keys = 0;

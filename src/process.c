@@ -1,5 +1,5 @@
 /* Asynchronous subprocess control for GNU Emacs.
-
+   异步消息控制
 Copyright (C) 1985-1988, 1993-1996, 1998-1999, 2001-2021 Free Software
 Foundation, Inc.
 

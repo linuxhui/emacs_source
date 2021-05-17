@@ -103,6 +103,7 @@ struct window
     union vectorlike_header header;
 
     /* The frame this window is on.  */
+      /* window 所在的frame */
     Lisp_Object frame;
 
     /* Following (to right or down) and preceding (to left or up)
@@ -115,13 +116,16 @@ struct window
        of the root window and 'prev' of the minibuffer window, if
        present, are nil.  'prev' of the root window and 'next' of the
        minibuffer window are always nil.  */
+      /* 指向前后的window */
     Lisp_Object next;
     Lisp_Object prev;
 
     /* The window this one is a child of.  For the root and a
        minibuffer window this is always nil.  */
+      /* 父类窗口 */
     Lisp_Object parent;
 
+      /* 窗口大小 */
     /* The "normal" size of the window.  These are fractions, but we
        do not use C doubles to avoid creating new Lisp_Float objects
        while interfacing Lisp in Fwindow_normal_size.  */
