@@ -367,6 +367,7 @@ typedef EMACS_INT Lisp_Word;
 	- (unsigned) (Lisp_Int0 >> !USE_LSB_TAG)) \
        & ((1 << INTTYPEBITS) - 1)))
 #define lisp_h_FLOATP(x) TAGGEDP (x, Lisp_Float)
+/* nilp == nil p */
 #define lisp_h_NILP(x) EQ (x, Qnil)
 #define lisp_h_SET_SYMBOL_VAL(sym, v) \
    (eassert ((sym)->u.s.redirect == SYMBOL_PLAINVAL), \

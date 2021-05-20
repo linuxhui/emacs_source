@@ -2226,6 +2226,7 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
     Vdump_mode = build_string (dump_mode);
 
   /* Enter editor command loop.  This never returns.  */
+  /* 进行键盘消息处理 */
   Frecursive_edit ();
   eassume (false);
 }

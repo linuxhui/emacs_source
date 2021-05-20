@@ -763,6 +763,7 @@ This function is called by the editor initialization to begin editing.  */)
 
   /* If we enter while input is blocked, don't lock up here.
      This may happen through the debugger during redisplay.  */
+  /* 阻塞就退出 */
   if (input_blocked_p ())
     return Qnil;
 
@@ -1040,7 +1041,7 @@ static Lisp_Object top_level_1 (Lisp_Object);
 /* Entry to editor-command-loop.
    This level has the catches for exiting/returning to editor command loop.
    It returns nil to exit recursive edit, t to abort it.  */
-
+/* 核心循环逻辑 */
 Lisp_Object
 command_loop (void)
 {
@@ -1090,7 +1091,9 @@ command_loop_2 (Lisp_Object ignore)
 {
   register Lisp_Object val;
 
+  /* 一直等待获取到数据 */
   do
+      /* 执行 command_loop_1, 异常为 Qerror, 异常用 cmd_error 捕获 */
     val = internal_condition_case (command_loop_1, Qerror, cmd_error);
   while (!NILP (val));
 
@@ -1225,9 +1228,10 @@ some_mouse_moved (void)
   return NULL;
 }
 
-
+
 /* This is the actual command reading loop,
    sans error-handling encapsulation.  */
+/* 循环读取，并处理错误 */
 
 enum { READ_KEY_ELTS = 30 };
 static int read_key_sequence (Lisp_Object *, Lisp_Object,
@@ -9241,9 +9245,11 @@ read_key_sequence (Lisp_Object *keybuf, Lisp_Object prompt,
 		   bool dont_downcase_last, bool can_return_switch_frame,
 		   bool fix_current_buffer, bool prevent_redisplay)
 {
+    /* 获取当前的变更站深度 */
   ptrdiff_t count = SPECPDL_INDEX ();
 
   /* How many keys there are in the current key sequence.  */
+  /* 查看有多少key在当前的序列中 */
   int t;
 
   /* The length of the echo buffer when we started reading, and

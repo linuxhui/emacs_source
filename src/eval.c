@@ -1458,6 +1458,7 @@ internal_lisp_condition_case (Lisp_Object var, Lisp_Object bodyform,
    If HANDLERS is Qerror, catch all errors
    but allow the debugger to run if that is enabled.  */
 
+/* 无参数的执行 bfun， 如果存在异常，则将异常放入 handlers中， 并且调用 hfun 进行异常处理  */
 Lisp_Object
 internal_condition_case (Lisp_Object (*bfun) (void), Lisp_Object handlers,
 			 Lisp_Object (*hfun) (Lisp_Object))
