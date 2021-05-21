@@ -3305,7 +3305,7 @@ extern Lisp_Object Vascii_canon_table;
 /* Call staticpro (&var) to protect static variable `var'.  */
 
 void staticpro (Lisp_Object const *);
-
+/* N  */
 enum { NSTATICS = 2048 };
 extern Lisp_Object const *staticvec[NSTATICS];
 extern int staticidx;

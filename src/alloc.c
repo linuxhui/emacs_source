@@ -1675,7 +1675,7 @@ static ptrdiff_t const STRING_BYTES_MAX =
 	& ~(sizeof (EMACS_INT) - 1)));
 
 /* Initialize string allocation.  Called from init_alloc_once.  */
-
+/* 初始化string 分配 */
 static void
 init_strings (void)
 {
@@ -5637,6 +5637,7 @@ purecopy (Lisp_Object obj)
 /* Put an entry in staticvec, pointing at the variable with address
    VARADDRESS.  */
 
+/* staticvec = static vector */
 void
 staticpro (Lisp_Object const *varaddress)
 {
@@ -7485,6 +7486,7 @@ static void init_alloc_once_for_pdumper (void);
 void
 init_alloc_once (void)
 {
+    /* GC 设置触发条件 */
   gc_cons_threshold = GC_DEFAULT_THRESHOLD;
   /* Even though Qt's contents are not set up, its address is known.  */
   Vpurify_flag = Qt;
@@ -7499,7 +7501,9 @@ init_alloc_once (void)
 
   verify_alloca ();
 
+  /* 初始化string */
   init_strings ();
+  /* 初始化 vectors */
   init_vectors ();
 }
 
